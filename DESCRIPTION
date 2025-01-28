@@ -1,0 +1,35 @@
+Package: scACCorDiON.su
+Title: Survival Analysis on scACCorDiON results
+Version: 0.0.0.9000
+Authors@R: c(
+    person("Tiago", "Maié", email = "tiagomaie+Rdev@hotmail.com", role = c("aut", "cre")),
+    person("James", "Nagai", email = "james.nagai+Rdev@gmail.com", role = c("aut"))
+  )
+Description: Produce survival analysis on ligand receptor results from scACCorDiON.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Language: en
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
+Imports: 
+    assertthat,
+    data.table,
+    DescTools,
+    dplyr,
+    limma (>= 3.62.2),
+    purrr,
+    stats,
+    survival,
+    tibble,
+    tidyr,
+    tidyselect,
+    yardstick
+Config/testthat/edition: 3
+Depends: 
+    R (>= 2.10)
+LazyData: true
+LazyDataCompression: xz
+Remotes: 
+    bioc::release/limma
+Suggests: 
+    testthat

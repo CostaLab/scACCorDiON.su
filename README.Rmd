@@ -1,0 +1,62 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# scACCorDiON.su
+
+<!-- badges: start -->
+<!-- badges: end -->
+
+The goal of scACCorDiON.su is to run survival analysis on the results of scACCorDiON.
+
+## Installation
+
+You can install the development version of scACCorDiON.su like so:
+
+``` r
+pak::pak("CostaLab/scACCorDiON.su")
+```
+
+## Example
+
+This is a basic example of how you could run this pipeline:
+
+```{r example}
+library(scACCorDiON.su)
+
+data(pdac_cci_data)
+data(paad_tcga_clinical_data)
+data(paad_tcga_expression_data)
+data(comparison_of_interest)
+
+results <-
+  run_survival(
+    comparison_oi = comparison_of_interest,
+    lr_data = pdac_cci_data,
+    tcga_exp_data = paad_tcga_expression_data,
+    tcga_clinical_data = paad_tcga_clinical_data,
+    selection_method = c("limma"),
+    custom_selection = NULL,
+    n_lr_selected = 5,
+    which_get = c("ligand", "receptor"),
+    is_signif = TRUE,
+    clinical_vars_in_model = c("stage")
+  )
+
+
+results$cox_models$coxph_clinical.lr_pairs |>
+  broom::tidy() |>
+  print()
+```
+

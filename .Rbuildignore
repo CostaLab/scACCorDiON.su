@@ -1,0 +1,7 @@
+^LICENSE\.md$
+^Makefile$
+^\.init_setup\.r$
+^\.update_setup\.r$
+^\.update_github_setup\.r$
+^README\.Rmd$
+^data-raw$

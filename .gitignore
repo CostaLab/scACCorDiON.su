@@ -1,0 +1,12 @@
+.Rproj.user
+.Rhistory
+.Rdata
+.httr-oauth
+.DS_Store
+.quarto
+Makefile
+.init_setup.r
+.update_setup.r
+.update_github_setup.r
+*.csv
+*.qs
