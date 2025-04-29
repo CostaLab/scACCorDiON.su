@@ -2,6 +2,7 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 # scACCorDiON.su
+![image](https://github.com/user-attachments/assets/e0015cf5-9eda-4ec8-a59e-38e0430d8d7a)
 
 <!-- badges: start -->
 
