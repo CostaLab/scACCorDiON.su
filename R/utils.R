@@ -64,7 +64,7 @@ get_lr_genes <- function(lr_oi_obj, set_name, n_lr = 1,  which_get = c("ligand",
   return(lr_genes_df)
 }
 
-build_lr_score <- function(survgene_dat, lr_genes_df){
+build_lr_score <- function(survgene_dat, lr_genes_df, sid_name = "sample_id"){
 
   # Building  LR score with geometric mean
   survgene_dat <- as.data.frame(survgene_dat)
@@ -73,24 +73,25 @@ build_lr_score <- function(survgene_dat, lr_genes_df){
   assertthat::assert_that(all(lr_genes_df$ligand %in% colnames(survgene_dat)))
   assertthat::assert_that(all(lr_genes_df$receptor %in% colnames(survgene_dat)))
 
-  res_list <- purrr::map(seq_len(nrow(lr_genes_df)), dat = survgene_dat, function(i, dat) {
-    lig <- lr_genes_df[i, "ligand"] |> unlist()
-    rec <- lr_genes_df[i, "receptor"] |> unlist()
-    lr_df <- data.frame(sample_id = dat[, "sample_id"], lig = dat[, lig], rec = dat[, rec])
-    lr_name <- paste0(lig, "_", rec)
-    res <-
-      lr_df |>
-      # dplyr::mutate(lig = log2(1 + lig)) |>
-      # dplyr::mutate(rec = log2(1 + rec)) |>
-      dplyr::rowwise() |>
-      dplyr::mutate({{lr_name}} := DescTools::Gmean(c(lig, rec))) |>
-      dplyr::select(-lig, -rec) |>
-      dplyr::ungroup()
-    return(res)
+  res_list <- purrr::map(
+    seq_len(nrow(lr_genes_df)),
+    dat = survgene_dat,
+    function(i, dat) {
+      lig <- lr_genes_df[i, "ligand"] |> unlist()
+      rec <- lr_genes_df[i, "receptor"] |> unlist()
+      lr_df <- data.frame(sample_id = dat[, sid_name], lig = dat[, lig], rec = dat[, rec])
+      lr_name <- paste0(lig, "_", rec)
+      res <-
+        lr_df |>
+        dplyr::rowwise() |>
+        dplyr::mutate({{lr_name}} := DescTools::Gmean(c(lig, rec))) |>
+        dplyr::select(-lig, -rec) |>
+        dplyr::ungroup()
+      return(res)
   })
 
-  lr_tbl <- purrr::reduce(res_list, dplyr::left_join, by = "sample_id")
-  f_res <- survgene_dat |> dplyr::left_join(lr_tbl, by = "sample_id")
+  lr_tbl <- purrr::reduce(res_list, dplyr::left_join, by = sid_name)
+  f_res <- survgene_dat |> dplyr::left_join(lr_tbl, by = sid_name)
   return(f_res)
 }
 
