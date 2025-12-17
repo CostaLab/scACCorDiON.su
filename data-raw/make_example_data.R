@@ -44,13 +44,18 @@ paad_tcga_expression_data <-
         as.data.frame() |>
         tibble::rownames_to_column("ENSG") |>
         tibble::as_tibble() |>
-        dplyr::inner_join(
-                annotables::grch38 |>
-                        dplyr::select(ensgene, symbol),
-                by = c("ENSG" = "ensgene")
+        dplyr::mutate(symbol =
+                (\(x){
+                        annot <-
+                                ensembldb::select(org.Hs.eg.db::org.Hs.eg.db, keys=ENSG, columns="SYMBOL", keytype="ENSEMBL") |>
+                                dplyr::distinct(ENSEMBL,.keep_all=TRUE)
+                        return(annot$SYMBOL)
+                })(ENSG)
         ) |>
         dplyr::relocate(symbol) |>
-        dplyr::select(-ENSG)
+        dplyr::filter(!is.na(symbol)) |> 
+        dplyr::group_by(symbol) |>
+        dplyr::summarize(dplyr::across(dplyr::where(is.numeric), mean))
 
 
 select_clinical_cols <- c(
